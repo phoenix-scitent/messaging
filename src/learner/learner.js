@@ -8,7 +8,6 @@ firebase.initializeApp(fbconfig);
 const userEmail = window.current_user_email;
 
 const messages = firebase.database().ref('messages');
-const users = firebase.database().ref('users');
 
 const mostRefEvent = (ref, evt) => {
   return most.fromEvent(evt, {
@@ -46,4 +45,32 @@ message$
   //.scan((messages, message) => { return R.append(message, messages) }, [])
   .map(messagesToHtml)
   .tap(render)
+  .drain();
+
+/////////////////////
+// add new message //
+/////////////////////
+
+//TODO: eventual selector: note for me, for instructor conversation, for all learners conversation
+
+var messageText = document.querySelector('#message-text');
+var submitButton = document.querySelector('#message-submit');
+
+const createMessage = body => ({
+  parentId: null,
+  from: userEmail,
+  to: null,
+  timestamp: Date.now(),
+  body: body
+});
+
+const persistMessage = message => {
+  messages.push(message);
+};
+
+most.fromEvent('click', submitButton)
+  .map((event) => { return messageText.value })
+  .map(createMessage)
+  .tap(persistMessage)
+  .tap(() => { messageText.value = '' })
   .drain();

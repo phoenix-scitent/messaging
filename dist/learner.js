@@ -16944,7 +16944,6 @@ firebase.initializeApp(fbconfig);
 var userEmail = window.current_user_email;
 
 var messages = firebase.database().ref('messages');
-var users = firebase.database().ref('users');
 
 var mostRefEvent = function mostRefEvent(ref, evt) {
   return most.fromEvent(evt, {
@@ -16987,5 +16986,34 @@ message$
 //.tap(console.log)
 //.scan((messages, message) => { return R.append(message, messages) }, [])
 .map(messagesToHtml).tap(render).drain();
+
+/////////////////////
+// add new message //
+/////////////////////
+
+//TODO: eventual selector: note for me, for instructor conversation, for all learners conversation
+
+var messageText = document.querySelector('#message-text');
+var submitButton = document.querySelector('#message-submit');
+
+var createMessage = function createMessage(body) {
+  return {
+    parentId: null,
+    from: userEmail,
+    to: null,
+    timestamp: Date.now(),
+    body: body
+  };
+};
+
+var persistMessage = function persistMessage(message) {
+  messages.push(message);
+};
+
+most.fromEvent('click', submitButton).map(function (event) {
+  return messageText.value;
+}).map(createMessage).tap(persistMessage).tap(function () {
+  messageText.value = '';
+}).drain();
 
 },{"../fbconfig":387,"firebase":4,"most":43,"ramda":78}]},{},[388]);

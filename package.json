@@ -4,7 +4,8 @@
   "description": "learner | learner - instructor | learner - learners",
   "main": "index.js",
   "scripts": {
-    "bundle:learner": "browserify src/learner/learner.js -o dist/learner.js -t [ babelify --presets [ es2015 ] ]"
+    "bundle:learner": "browserify src/learner/learner.js -o dist/learner.js -t [ babelify --presets [ es2015 ] ]",
+    "bundle:instructor": "browserify src/instructor/instructor.js -o dist/instructor.js -t [ babelify --presets [ es2015 ] ]"
   },
   "repository": {
     "type": "git",
