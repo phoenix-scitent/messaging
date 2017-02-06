@@ -1,30 +1,14 @@
 const most = require('most');
 const R = require('ramda');
-const EventEmitter = require('events');
 const firebase = require('firebase');
 const fbconfig = require('../fbconfig');
 
 firebase.initializeApp(fbconfig);
 
-const userEmail = 'user@user.com'; //window.current_user_email;
+const userEmail = window.current_user_email;
 
 const messages = firebase.database().ref('messages');
 const users = firebase.database().ref('users');
-
-//users.push({
-//  email: 'user@user.com'
-//})
-
-//const createFakeMessage = () => {
-//  messages.push({
-//    parentId: null,
-//    from: userEmail,
-//    body: 'Oliver Cromwell',
-//    timestamp: Date.now()
-//  })
-//};
-
-//most.periodic(2000).forEach(createFakeMessage);
 
 const mostRefEvent = (ref, evt) => {
   return most.fromEvent(evt, {
