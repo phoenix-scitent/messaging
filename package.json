@@ -1,0 +1,28 @@
+{
+  "name": "messaging",
+  "version": "1.0.0",
+  "description": "learner | learner - instructor | learner - learners",
+  "main": "index.js",
+  "scripts": {
+    "bundle:learner": "browserify src/learner/learner.js -o dist/learner.js -t [ babelify --presets [ es2015 ] ]"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phoenix-scitent/messaging.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/phoenix-scitent/messaging/issues"
+  },
+  "homepage": "https://github.com/phoenix-scitent/messaging#readme",
+  "dependencies": {
+    "babel-preset-es2015": "^6.22.0",
+    "babelify": "^7.3.0",
+    "browserify": "^14.0.0",
+    "firebase": "^3.6.8",
+    "most": "^1.2.1",
+    "ramda": "^0.23.0",
+    "watchify": "^3.9.0"
+  }
+}
