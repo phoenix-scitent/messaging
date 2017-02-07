@@ -16963,28 +16963,84 @@ var mostRefEvent = function mostRefEvent(ref, evt) {
 // 'child_removed'
 // 'child_updated'
 
-var userMessages = function userMessages(email) {
-  return mostRefEvent(messages.orderByChild('').equalTo(email), 'value');
-}; //.map(R.nth(0));
+var unanswered$ = mostRefEvent(messages.orderByChild('responses').endAt(null), 'value');
+var answered$ = mostRefEvent(messages.orderByChild('responses').startAt(""), 'value');
 
-var message$ = userMessages(userEmail);
+//////////////////
+// add response //
+//////////////////
 
-var messagesToHtml = R.compose(R.join(''), R.map(function (message) {
-  return '<li>' + message.body + '</li>';
-}), R.values);
-
-var render = function render(messagesHtml) {
-  //console.log(messagesHtml);
-  document.getElementById('questions').innerHTML = messagesHtml;
+var createResponse = function createResponse(from, response) {
+  return {
+    to: from,
+    from: instructorEmail,
+    timestamp: Date.now(),
+    body: response
+  };
 };
 
-message$
+var persistMessage = function persistMessage(context) {
+  messages.child(context.id).child('responses').push(createResponse(context.from, context.response));
+};
+
+most.fromEvent('click', document.querySelector('body')).filter(function (event) {
+  return event.target.classList.contains('respond');
+}).map(function (event) {
+  return { id: event.target.dataset.messageId, from: event.target.dataset.messageFrom, response: event.target.previousSibling.previousSibling.value };
+}).tap(persistMessage).drain();
+
+////////////////
+// unanswered //
+////////////////
+
+var unansweredToHtml = function unansweredToHtml(message, id) {
+  return '<li>\n    <div class=\'message-body\'>' + message.body + '</div>\n    <div data-message-id="' + id + '" class=\'message-responses\'>\n      <textarea class="response-text"></textarea>\n      <button data-message-id="' + id + '" data-message-from="' + message.from + '" class="respond">Respond</button>\n    </div>\n  </li>';
+};
+
+var unansweredsToHtml = R.compose(R.join(''), R.values, R.mapObjIndexed(unansweredToHtml));
+
+var renderUnanswered = function renderUnanswered(messagesHtml) {
+  //console.log(messagesHtml);
+  document.getElementById('unanswered').innerHTML = messagesHtml;
+};
+
+unanswered$
 //.tap(console.log)
 .map(function (snap) {
   return snap.val();
 })
 //.tap(console.log)
 //.scan((messages, message) => { return R.append(message, messages) }, [])
-.map(messagesToHtml).tap(render).drain();
+.map(unansweredsToHtml).tap(renderUnanswered).drain();
+
+//////////////
+// answered //
+//////////////
+
+var responseToHtml = function responseToHtml(response, id) {
+  return '<li>\n    <div class=\'response-body\'>' + response.body + '</div>\n    <div class=\'response-from\'>From: ' + response.from + '</div>\n  </li>';
+};
+
+var responsesToHtml = R.compose(R.join(''), R.values, R.mapObjIndexed(responseToHtml));
+
+var answeredToHtml = function answeredToHtml(message, id) {
+  return '<li>\n    <div class=\'message-body\'>' + message.body + '</div>\n    <div data-message-id="' + id + '" class=\'message-responses\'>\n      <ul>' + responsesToHtml(R.pathOr([], ['responses'], message)) + '</ul>\n    </div>\n  </li>';
+};
+
+var answeredsToHtml = R.compose(R.join(''), R.values, R.mapObjIndexed(answeredToHtml));
+
+var renderAnswered = function renderAnswered(messagesHtml) {
+  //console.log(messagesHtml);
+  document.getElementById('answered').innerHTML = messagesHtml;
+};
+
+answered$
+//.tap(console.log)
+.map(function (snap) {
+  return snap.val();
+})
+//.tap(console.log)
+//.scan((messages, message) => { return R.append(message, messages) }, [])
+.map(answeredsToHtml).tap(renderAnswered).drain();
 
 },{"../fbconfig":387,"firebase":4,"most":43,"ramda":78}]},{},[388]);

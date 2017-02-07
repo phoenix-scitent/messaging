@@ -1,19 +1,22 @@
 # messaging
-learner | learner - instructor | learner - learners
+
+> learner | learner - instructor | learner - learners
 
 ### data types
 
-state of data structure allows for polymorphic use, but all are 'response' (initial_question, question, answer)
+> state of data structure allows for polymorphic use, but all are 'response' (initial_question, question, answer)
 
+```
 response = {
   to: null | EmailString
   from: EmailString
   timestamp: DatetimeNumber
   body: BodyString
-  responses: [] | [response, response, ...]
+  responses: {} | { <pushkey>: response, <pushkey>: response, ... }
 }
 
 initial_question = response
+```
 
 #### flags and state
 
@@ -27,13 +30,13 @@ context (paths/URIs)
 ##### learner (in activity)
 
 ```javascript
-ref.orderByChild('context').equals(LearnerActivitySectionPathUri)
+ref.orderByChild('context').equalTo(LearnerActivitySectionPathUri)
 ```
 
 ##### learner (activity)
 
 ```javascript
-ref.orderByChild('from').equals(EmailString)
+ref.orderByChild('from').equalTo(EmailString)
 ```
 
 ##### instructor

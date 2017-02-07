@@ -26,9 +26,8 @@ var messageText = document.querySelector('#input_1_1');
 var submitButton = document.querySelector('#gform_submit_button_1');
 
 const createMessage = body => ({
-  parentId: null,
-  from: userEmail,
   to: null,
+  from: userEmail,
   timestamp: Date.now(),
   body: body
 });
@@ -57,10 +56,36 @@ const userMessages = (email) => mostRefEvent(messages.orderByChild('from').equal
 
 const message$ = userMessages(userEmail);
 
+const responseToHtml = (response, id) => {
+  return `<li>
+    <div class='response-body'>${response.body}</div>
+    <div class='response-from'>From: ${response.from}</div>
+  </li>`
+};
+
+const responsesToHtml = R.compose(
+  //TODO: recursive nesting or tagged connection single line for each?
+  //TODO: UI and persistance behavior to respond to responses
+  R.join(''),
+  R.values,
+  R.mapObjIndexed(responseToHtml)
+);
+
+const emptyObj = {};
+
+const messageToHtml = (message, id) => {
+  return `<li data-message-id="${id}">
+    <div class="message-body">${message.body}</div>
+    <div class="message-responses">
+      <ul>${responsesToHtml(R.pathOr(emptyObj, ['responses'], message))}</ul>
+    </div>
+  </li>`
+};
+
 const messagesToHtml = R.compose(
   R.join(''),
-  R.map((message) => { return `<li>${message.body}</li>` }),
-  R.values
+  R.values,
+  R.mapObjIndexed(messageToHtml)
 );
 
 const render = (messagesHtml) => {

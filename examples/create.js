@@ -11,6 +11,7 @@ const fbconfig = require('../src/fbconfig');
 
 firebase.initializeApp(fbconfig);
 
+const instructorEmail = 'instructor@instructor.com';
 const userEmail = 'user@user.com';
 
 const messages = firebase.database().ref('messages');
@@ -22,11 +23,34 @@ const users = firebase.database().ref('users');
 
 const createFakeMessage = () => {
   messages.push({
-    parentId: null,
+    to: null,
     from: userEmail,
     body: '9 bill, millis',
     timestamp: Date.now(),
-    responses: []
+    responses: [
+      {
+        to: userEmail,
+        from: instructorEmail,
+        body: 'here is a response!',
+        timestamp: Date.now(),
+        responses: []
+      },
+      {
+        to: userEmail,
+        from: instructorEmail,
+        body: 'here is another response!',
+        timestamp: Date.now(),
+        responses: [
+          {
+            to: instructorEmail,
+            from: userEmail,
+            body: 'here is a response to a response!',
+            timestamp: Date.now(),
+            responses: []
+          }
+        ]
+      }
+    ]
   })
 };
 

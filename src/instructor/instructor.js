@@ -23,26 +23,106 @@ const mostRefEvent = (ref, evt) => {
 // 'child_removed'
 // 'child_updated'
 
-const userMessages = (email) => mostRefEvent(messages.orderByChild('').equalTo(email), 'value') //.map(R.nth(0));
+const unanswered$ = mostRefEvent(messages.orderByChild('responses').endAt(null), 'value');
+const answered$ = mostRefEvent(messages.orderByChild('responses').startAt(""), 'value');
 
-const message$ = userMessages(userEmail);
+//////////////////
+// add response //
+//////////////////
 
-const messagesToHtml = R.compose(
-    R.join(''),
-    R.map((message) => { return `<li>${message.body}</li>` }),
-    R.values
-);
+const createResponse = (from, response) => ({
+  to: from,
+  from: instructorEmail,
+  timestamp: Date.now(),
+  body: response
+});
 
-const render = (messagesHtml) => {
-  //console.log(messagesHtml);
-  document.getElementById('questions').innerHTML = messagesHtml;
+const persistMessage = context => {
+  messages.child(context.id).child('responses').push(createResponse(context.from, context.response));
 };
 
-message$
+most.fromEvent('click', document.querySelector('body'))
+  .filter((event) => { return event.target.classList.contains('respond') })
+  .map((event) => { return { id: event.target.dataset.messageId, from: event.target.dataset.messageFrom, response: event.target.previousSibling.previousSibling.value } })
+  .tap(persistMessage)
+  .drain();
+
+////////////////
+// unanswered //
+////////////////
+
+const unansweredToHtml = (message, id) => {
+  return `<li>
+    <div class='message-body'>${message.body}</div>
+    <div data-message-id="${id}" class='message-responses'>
+      <textarea class="response-text"></textarea>
+      <button data-message-id="${id}" data-message-from="${message.from}" class="respond">Respond</button>
+    </div>
+  </li>`
+};
+
+const unansweredsToHtml = R.compose(
+  R.join(''),
+  R.values,
+  R.mapObjIndexed(unansweredToHtml)
+);
+
+const renderUnanswered = (messagesHtml) => {
+  //console.log(messagesHtml);
+  document.getElementById('unanswered').innerHTML = messagesHtml;
+};
+
+unanswered$
   //.tap(console.log)
-    .map((snap) => { return snap.val() })
+  .map((snap) => { return snap.val() })
   //.tap(console.log)
   //.scan((messages, message) => { return R.append(message, messages) }, [])
-    .map(messagesToHtml)
-    .tap(render)
-    .drain();
+  .map(unansweredsToHtml)
+  .tap(renderUnanswered)
+  .drain();
+
+//////////////
+// answered //
+//////////////
+
+const responseToHtml = (response, id) => {
+  return `<li>
+    <div class='response-body'>${response.body}</div>
+    <div class='response-from'>From: ${response.from}</div>
+  </li>`
+};
+
+const responsesToHtml = R.compose(
+    R.join(''),
+    R.values,
+    R.mapObjIndexed(responseToHtml)
+);
+
+const answeredToHtml = (message, id) => {
+  return `<li>
+    <div class='message-body'>${message.body}</div>
+    <div data-message-id="${id}" class='message-responses'>
+      <ul>${responsesToHtml(R.pathOr([], ['responses'], message))}</ul>
+    </div>
+  </li>`
+};
+
+const answeredsToHtml = R.compose(
+    R.join(''),
+    R.values,
+    R.mapObjIndexed(answeredToHtml)
+);
+
+const renderAnswered = (messagesHtml) => {
+  //console.log(messagesHtml);
+  document.getElementById('answered').innerHTML = messagesHtml;
+};
+
+answered$
+  //.tap(console.log)
+  .map((snap) => { return snap.val() })
+  //.tap(console.log)
+  //.scan((messages, message) => { return R.append(message, messages) }, [])
+  .map(answeredsToHtml)
+  .tap(renderAnswered)
+  .drain();
