@@ -16941,7 +16941,7 @@ var fbconfig = require('../fbconfig');
 
 firebase.initializeApp(fbconfig);
 
-var userEmail = window.current_user_email;
+var instructorEmail = window.current_instructor_email;
 
 var messages = firebase.database().ref('messages');
 
@@ -16956,46 +16956,15 @@ var mostRefEvent = function mostRefEvent(ref, evt) {
   });
 };
 
-/////////////////////
-// add new message //
-/////////////////////
+//TODO: remove on remove?
+//TODO: update on update?
 
-//TODO: eventual selector: note for me, for instructor conversation, for all learners conversation
-
-var messageText = document.querySelector('#input_1_1');
-var submitButton = document.querySelector('#gform_submit_button_1');
-
-var createMessage = function createMessage(body) {
-  return {
-    parentId: null,
-    from: userEmail,
-    to: null,
-    timestamp: Date.now(),
-    body: body
-  };
-};
-
-var persistMessage = function persistMessage(message) {
-  messages.push(message);
-};
-
-most.fromEvent('click', submitButton).map(function (event) {
-  return messageText.value;
-}).map(createMessage).tap(persistMessage).tap(function () {
-  messageText.value = '';
-}).drain();
-
-/////////////////////////////////
-// show messages and responses //
-/////////////////////////////////
-
-// TODO: refactor?
 // 'child_added'
 // 'child_removed'
 // 'child_updated'
 
 var userMessages = function userMessages(email) {
-  return mostRefEvent(messages.orderByChild('from').equalTo(email), 'value');
+  return mostRefEvent(messages.orderByChild('').equalTo(email), 'value');
 }; //.map(R.nth(0));
 
 var message$ = userMessages(userEmail);

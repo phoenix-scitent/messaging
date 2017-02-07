@@ -16,9 +16,39 @@ const mostRefEvent = (ref, evt) => {
   })
 };
 
-//TODO: remove on remove?
-//TODO: update on update?
+/////////////////////
+// add new message //
+/////////////////////
 
+//TODO: eventual selector: note for me, for instructor conversation, for all learners conversation
+
+var messageText = document.querySelector('#input_1_1');
+var submitButton = document.querySelector('#gform_submit_button_1');
+
+const createMessage = body => ({
+  parentId: null,
+  from: userEmail,
+  to: null,
+  timestamp: Date.now(),
+  body: body
+});
+
+const persistMessage = message => {
+  messages.push(message);
+};
+
+most.fromEvent('click', submitButton)
+  .map((event) => { return messageText.value })
+  .map(createMessage)
+  .tap(persistMessage)
+  .tap(() => { messageText.value = '' })
+  .drain();
+
+/////////////////////////////////
+// show messages and responses //
+/////////////////////////////////
+
+// TODO: refactor?
 // 'child_added'
 // 'child_removed'
 // 'child_updated'
@@ -45,32 +75,4 @@ message$
   //.scan((messages, message) => { return R.append(message, messages) }, [])
   .map(messagesToHtml)
   .tap(render)
-  .drain();
-
-/////////////////////
-// add new message //
-/////////////////////
-
-//TODO: eventual selector: note for me, for instructor conversation, for all learners conversation
-
-var messageText = document.querySelector('#message-text');
-var submitButton = document.querySelector('#message-submit');
-
-const createMessage = body => ({
-  parentId: null,
-  from: userEmail,
-  to: null,
-  timestamp: Date.now(),
-  body: body
-});
-
-const persistMessage = message => {
-  messages.push(message);
-};
-
-most.fromEvent('click', submitButton)
-  .map((event) => { return messageText.value })
-  .map(createMessage)
-  .tap(persistMessage)
-  .tap(() => { messageText.value = '' })
   .drain();

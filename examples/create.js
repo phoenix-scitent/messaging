@@ -25,7 +25,8 @@ const createFakeMessage = () => {
     parentId: null,
     from: userEmail,
     body: '9 bill, millis',
-    timestamp: Date.now()
+    timestamp: Date.now(),
+    responses: []
   })
 };
 
