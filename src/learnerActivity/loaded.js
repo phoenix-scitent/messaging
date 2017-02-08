@@ -111,8 +111,8 @@ var loaded = function(learningElement){
     var value = R.pathOr(null, ['value'], model);
 
     if(shouldSubmit){
-      var fromEmail = R.pathOr('---', ['context', 'user'], window);
       var body = R.pathOr('---', ['value'], model);
+      var fromEmail = R.pathOr('---', ['context', 'user'], window);
       var course = R.pathOr('---', ['context', 'course'], window);
       var activity = R.pathOr('---', ['context', 'activity'], window);
       var section = R.pathOr('---', ['context', 'section'], window);

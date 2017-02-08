@@ -1,38 +1,19 @@
 # todo
 
 ```
-8]
 2 paths seem useful to me
-
-[10:08]
 straight up location
-
-[10:09]
 course_slug/activity_slug/section_slug
-
-[10:09]
 and one that concats the user at the beginning
-
-[10:09]
 that way
-
-[10:09]
-the user query his own while going through the ocurse
-
-[10:09]
-course
-
-[10:10]
+the user query his own while going through the course
 and later on, the admin side can aggregate the messages by course || activity || section
-
-[10:10]
 maybe the reverse would be better
-
-[10:10]
 course_slug/activity_slug/section_slug/userid
 ```
 
-- activity connected to share context
+- add section info (and/or learner email) in instructor context?
+- activity connected to share context (via window for simplicity?)
 - pull out creating data structures and push/set and connections (export streamsa and functions)
 - tracking and bookmarking in firebase with ETL bigquery
 - authentication/authorization in firebase
@@ -43,8 +24,9 @@ course_slug/activity_slug/section_slug/userid
 
 ### integration
 
-- `dist/instructor.js` via netlify
-- `dist/learner.js` via netlify
+- `dist/instructor.js` via netlify, embedded in WP
+- `dist/learner.js` via netlify, embedded in WP
+- `import { configureMessaging } from 'messaging';` via activity config
 
 ### data types
 
