@@ -16976,7 +16976,7 @@ var createResponse = function createResponse(from, response) {
     from: instructorEmail,
     timestamp: Date.now(),
     body: response,
-    messageCreationPath: userEmail + '/instructorPage'
+    messageCreationPath: instructorEmail + '/instructorPage'
   };
 };
 
