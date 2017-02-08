@@ -5,7 +5,7 @@ const fbconfig = require('../fbconfig');
 
 firebase.initializeApp(fbconfig);
 
-const instructorEmail = window.current_instructor_email;
+const instructorEmail = window.current_user_email;
 
 const messages = firebase.database().ref('messages');
 
@@ -34,7 +34,8 @@ const createResponse = (from, response) => ({
   to: from,
   from: instructorEmail,
   timestamp: Date.now(),
-  body: response
+  body: response,
+  messageCreationPath: `${userEmail}/instructorPage`
 });
 
 const persistMessage = context => {

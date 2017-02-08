@@ -1,6 +1,17 @@
+# todo
+- activity connected to share context
+- pull out creating data structures and push/set and connections (export streamsa and functions)
+- tracking and bookmarking in firebase with ETL bigquery
+- authentication/authorization in firebase
+
 # messaging
 
 > learner | learner - instructor | learner - learners
+
+### integration
+
+- `dist/instructor.js` via netlify 
+- `dist/learner.js` via netlify
 
 ### data types
 
@@ -12,7 +23,8 @@ response = {
   from: EmailString
   timestamp: DatetimeNumber
   body: BodyString
-  responses: {} | { <pushkey>: response, <pushkey>: response, ... }
+  responses: {} | { <pushkey>: response, <pushkey>: response, ... },
+  messageCreationPath: PathString (EmailString/LocationString)
 }
 
 initial_question = response
@@ -20,10 +32,10 @@ initial_question = response
 
 #### flags and state
 
-open | closed
-unanswered | answered | response ('implicitly available via responses.length?')
-permissions (learner | learner && instructor | all)
-context (paths/URIs)
+- open | closed
+- unanswered | answered | response ('implicitly available via responses.length?')
+- permissions (learner | learner && instructor | all)
+- context (paths/URIs)
 
 #### retreval
 

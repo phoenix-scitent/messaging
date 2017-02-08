@@ -16941,7 +16941,7 @@ var fbconfig = require('../fbconfig');
 
 firebase.initializeApp(fbconfig);
 
-var instructorEmail = window.current_instructor_email;
+var instructorEmail = window.current_user_email;
 
 var messages = firebase.database().ref('messages');
 
@@ -16975,7 +16975,8 @@ var createResponse = function createResponse(from, response) {
     to: from,
     from: instructorEmail,
     timestamp: Date.now(),
-    body: response
+    body: response,
+    messageCreationPath: userEmail + '/instructorPage'
   };
 };
 

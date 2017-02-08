@@ -16970,7 +16970,8 @@ var createMessage = function createMessage(body) {
     to: null,
     from: userEmail,
     timestamp: Date.now(),
-    body: body
+    body: body,
+    messageCreationPath: userEmail + '/learnerPage'
   };
 };
 
