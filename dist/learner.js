@@ -17008,7 +17008,8 @@ var responseToHtml = function responseToHtml(response, id) {
 var responsesToHtml = R.compose(
 //TODO: recursive nesting or tagged connection single line for each?
 //TODO: UI and persistance behavior to respond to responses
-R.join(''), R.values, R.mapObjIndexed(responseToHtml));
+R.join(''), R.reverse, // most recent first
+R.values, R.mapObjIndexed(responseToHtml));
 
 var emptyObj = {};
 
@@ -17016,7 +17017,8 @@ var messageToHtml = function messageToHtml(message, id) {
   return '<li data-message-id="' + id + '">\n    <div class="message-body">' + message.body + '</div>\n    <div class="message-responses">\n      <ul>' + responsesToHtml(R.pathOr(emptyObj, ['responses'], message)) + '</ul>\n    </div>\n  </li>';
 };
 
-var messagesToHtml = R.compose(R.join(''), R.values, R.mapObjIndexed(messageToHtml));
+var messagesToHtml = R.compose(R.join(''), R.reverse, // most recent first
+R.values, R.mapObjIndexed(messageToHtml));
 
 var render = function render(messagesHtml) {
   //console.log(messagesHtml);

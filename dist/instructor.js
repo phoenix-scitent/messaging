@@ -16997,7 +16997,9 @@ var unansweredToHtml = function unansweredToHtml(message, id) {
   return '<li>\n    <div class=\'message-body\'>' + message.body + '</div>\n    <div data-message-id="' + id + '" class=\'message-responses\'>\n      <textarea class="response-text"></textarea>\n      <button data-message-id="' + id + '" class="respond">Respond</button>\n    </div>\n  </li>';
 };
 
-var unansweredsToHtml = R.compose(R.join(''), R.values, R.mapObjIndexed(unansweredToHtml));
+var unansweredsToHtml = R.compose(R.join(''),
+// least recent first
+R.values, R.mapObjIndexed(unansweredToHtml));
 
 var renderUnanswered = function renderUnanswered(messagesHtml) {
   //console.log(messagesHtml);
@@ -17021,13 +17023,15 @@ var responseToHtml = function responseToHtml(response, id) {
   return '<li>\n    <div class=\'response-body\'>' + response.body + '</div>\n    <div class=\'response-from\'>From: ' + response.from + '</div>\n  </li>';
 };
 
-var responsesToHtml = R.compose(R.join(''), R.values, R.mapObjIndexed(responseToHtml));
+var responsesToHtml = R.compose(R.join(''), R.reverse, // most recent first
+R.values, R.mapObjIndexed(responseToHtml));
 
 var answeredToHtml = function answeredToHtml(message, id) {
   return '<li>\n    <div class=\'message-body\'>' + message.body + '</div>\n    <div data-message-id="' + id + '" class=\'message-responses\'>\n      <ul>' + responsesToHtml(R.pathOr([], ['responses'], message)) + '</ul>\n    </div>\n  </li>';
 };
 
-var answeredsToHtml = R.compose(R.join(''), R.values, R.mapObjIndexed(answeredToHtml));
+var answeredsToHtml = R.compose(R.join(''), R.reverse, // most recent first
+R.values, R.mapObjIndexed(answeredToHtml));
 
 var renderAnswered = function renderAnswered(messagesHtml) {
   //console.log(messagesHtml);

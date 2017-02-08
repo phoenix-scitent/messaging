@@ -68,6 +68,7 @@ const responsesToHtml = R.compose(
   //TODO: recursive nesting or tagged connection single line for each?
   //TODO: UI and persistance behavior to respond to responses
   R.join(''),
+  R.reverse, // most recent first
   R.values,
   R.mapObjIndexed(responseToHtml)
 );
@@ -85,6 +86,7 @@ const messageToHtml = (message, id) => {
 
 const messagesToHtml = R.compose(
   R.join(''),
+  R.reverse, // most recent first
   R.values,
   R.mapObjIndexed(messageToHtml)
 );

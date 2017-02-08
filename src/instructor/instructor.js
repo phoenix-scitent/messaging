@@ -63,6 +63,7 @@ const unansweredToHtml = (message, id) => {
 
 const unansweredsToHtml = R.compose(
   R.join(''),
+  // least recent first
   R.values,
   R.mapObjIndexed(unansweredToHtml)
 );
@@ -94,6 +95,7 @@ const responseToHtml = (response, id) => {
 
 const responsesToHtml = R.compose(
     R.join(''),
+    R.reverse, // most recent first
     R.values,
     R.mapObjIndexed(responseToHtml)
 );
@@ -109,6 +111,7 @@ const answeredToHtml = (message, id) => {
 
 const answeredsToHtml = R.compose(
     R.join(''),
+    R.reverse, // most recent first
     R.values,
     R.mapObjIndexed(answeredToHtml)
 );
