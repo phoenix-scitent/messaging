@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <title></title>
+</head>
+<body>
+
+  <div learning-element="messaging"></div>
+
+  <script>
+
+    // hucklebuck (activity context)
+
+    window.context = {
+      user: 'user2@user.com',
+      course: 'Test Course',
+      activity: 'Activity One',
+      section: 'section1'
+    };
+
+    setInterval(function(){
+      window.context.section = window.context.section + '1';
+    }, 10000)
+
+  </script>
+
+  <!-- START: learning-element libs -->
+  <script src="./config.js"></script>
+  <!-- END: learning-element libs -->
+
+</body>
+</html>

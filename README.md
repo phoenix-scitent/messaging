@@ -1,4 +1,37 @@
 # todo
+
+```
+8]
+2 paths seem useful to me
+
+[10:08]
+straight up location
+
+[10:09]
+course_slug/activity_slug/section_slug
+
+[10:09]
+and one that concats the user at the beginning
+
+[10:09]
+that way
+
+[10:09]
+the user query his own while going through the ocurse
+
+[10:09]
+course
+
+[10:10]
+and later on, the admin side can aggregate the messages by course || activity || section
+
+[10:10]
+maybe the reverse would be better
+
+[10:10]
+course_slug/activity_slug/section_slug/userid
+```
+
 - activity connected to share context
 - pull out creating data structures and push/set and connections (export streamsa and functions)
 - tracking and bookmarking in firebase with ETL bigquery

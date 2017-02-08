@@ -2,10 +2,13 @@
   "name": "messaging",
   "version": "1.0.0",
   "description": "learner | learner - instructor | learner - learners",
-  "main": "index.js",
+  "main": "./src/learnerActivity/setup.js",
   "scripts": {
     "bundle:learner": "browserify src/learner/learner.js -o dist/learner.js -t [ babelify --presets [ es2015 ] ]",
-    "bundle:instructor": "browserify src/instructor/instructor.js -o dist/instructor.js -t [ babelify --presets [ es2015 ] ]"
+    "bundle:instructor": "browserify src/instructor/instructor.js -o dist/instructor.js -t [ babelify --presets [ es2015 ] ]",
+    "start": "gulp browser-sync",
+    "bundle": "gulp bundle",
+    "watch": "gulp watch"
   },
   "repository": {
     "type": "git",
@@ -24,6 +27,33 @@
     "firebase": "^3.6.8",
     "most": "^1.2.1",
     "ramda": "^0.23.0",
-    "watchify": "^3.9.0"
+    "watchify": "^3.9.0",
+    "babel-preset-es2017": "^6.16.0",
+    "browser-sync": "^2.18.6",
+    "desandro-classie": "^1.0.1",
+    "gulp": "^3.9.1",
+    "gulp-plumber": "^1.1.0",
+    "gulp-size": "^2.1.0",
+    "gulp-sourcemaps": "^2.4.0",
+    "gulp-util": "^3.0.8",
+    "partybus": "git+ssh://git@github.com/phoenix-scitent/partybus.git#latest",
+    "snabbdom": "^0.6.3",
+    "snabbdom-virtualize": "^0.6.0",
+    "union-type": "^0.3.3",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0",
+    "watcher": "git+ssh://git@github.com/phoenix-scitent/watcher.git#latest"
+  },
+  "browserify": {
+    "transform": [
+      [
+        "babelify",
+        {
+          "presets": [
+            "es2015"
+          ]
+        }
+      ]
+    ]
   }
 }
