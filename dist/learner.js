@@ -16978,7 +16978,9 @@ var persistMessage = function persistMessage(message) {
   messages.push(message);
 };
 
-most.fromEvent('click', submitButton).map(function (event) {
+most.fromEvent('click', submitButton).tap(function (event) {
+  event.preventDefault();
+}).map(function (event) {
   return messageText.value;
 }).map(createMessage).tap(persistMessage).tap(function () {
   messageText.value = '';

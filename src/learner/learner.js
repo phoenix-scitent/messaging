@@ -37,6 +37,7 @@ const persistMessage = message => {
 };
 
 most.fromEvent('click', submitButton)
+  .tap((event) => { event.preventDefault() })
   .map((event) => { return messageText.value })
   .map(createMessage)
   .tap(persistMessage)
