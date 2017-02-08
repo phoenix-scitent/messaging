@@ -16970,9 +16970,8 @@ var answered$ = mostRefEvent(messages.orderByChild('responses').startAt(""), 'va
 // add response //
 //////////////////
 
-var createResponse = function createResponse(from, response) {
+var createResponse = function createResponse(response) {
   return {
-    to: from,
     from: instructorEmail,
     timestamp: Date.now(),
     body: response,
@@ -16981,13 +16980,13 @@ var createResponse = function createResponse(from, response) {
 };
 
 var persistMessage = function persistMessage(context) {
-  messages.child(context.id).child('responses').push(createResponse(context.from, context.response));
+  messages.child(context.id).child('responses').push(createResponse(context.response));
 };
 
 most.fromEvent('click', document.querySelector('body')).filter(function (event) {
   return event.target.classList.contains('respond');
 }).map(function (event) {
-  return { id: event.target.dataset.messageId, from: event.target.dataset.messageFrom, response: event.target.previousSibling.previousSibling.value };
+  return { id: event.target.dataset.messageId, response: event.target.previousSibling.previousSibling.value };
 }).tap(persistMessage).drain();
 
 ////////////////
@@ -16995,7 +16994,7 @@ most.fromEvent('click', document.querySelector('body')).filter(function (event) 
 ////////////////
 
 var unansweredToHtml = function unansweredToHtml(message, id) {
-  return '<li>\n    <div class=\'message-body\'>' + message.body + '</div>\n    <div data-message-id="' + id + '" class=\'message-responses\'>\n      <textarea class="response-text"></textarea>\n      <button data-message-id="' + id + '" data-message-from="' + message.from + '" class="respond">Respond</button>\n    </div>\n  </li>';
+  return '<li>\n    <div class=\'message-body\'>' + message.body + '</div>\n    <div data-message-id="' + id + '" class=\'message-responses\'>\n      <textarea class="response-text"></textarea>\n      <button data-message-id="' + id + '" class="respond">Respond</button>\n    </div>\n  </li>';
 };
 
 var unansweredsToHtml = R.compose(R.join(''), R.values, R.mapObjIndexed(unansweredToHtml));

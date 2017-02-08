@@ -10,7 +10,7 @@
 
 ### integration
 
-- `dist/instructor.js` via netlify 
+- `dist/instructor.js` via netlify
 - `dist/learner.js` via netlify
 
 ### data types
@@ -19,7 +19,6 @@
 
 ```
 response = {
-  to: null | EmailString
   from: EmailString
   timestamp: DatetimeNumber
   body: BodyString

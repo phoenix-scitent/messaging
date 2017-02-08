@@ -30,8 +30,7 @@ const answered$ = mostRefEvent(messages.orderByChild('responses').startAt(""), '
 // add response //
 //////////////////
 
-const createResponse = (from, response) => ({
-  to: from,
+const createResponse = (response) => ({
   from: instructorEmail,
   timestamp: Date.now(),
   body: response,
@@ -39,12 +38,12 @@ const createResponse = (from, response) => ({
 });
 
 const persistMessage = context => {
-  messages.child(context.id).child('responses').push(createResponse(context.from, context.response));
+  messages.child(context.id).child('responses').push(createResponse(context.response));
 };
 
 most.fromEvent('click', document.querySelector('body'))
   .filter((event) => { return event.target.classList.contains('respond') })
-  .map((event) => { return { id: event.target.dataset.messageId, from: event.target.dataset.messageFrom, response: event.target.previousSibling.previousSibling.value } })
+  .map((event) => { return { id: event.target.dataset.messageId, response: event.target.previousSibling.previousSibling.value } })
   .tap(persistMessage)
   .drain();
 
@@ -57,7 +56,7 @@ const unansweredToHtml = (message, id) => {
     <div class='message-body'>${message.body}</div>
     <div data-message-id="${id}" class='message-responses'>
       <textarea class="response-text"></textarea>
-      <button data-message-id="${id}" data-message-from="${message.from}" class="respond">Respond</button>
+      <button data-message-id="${id}" class="respond">Respond</button>
     </div>
   </li>`
 };

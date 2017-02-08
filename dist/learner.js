@@ -16967,7 +16967,6 @@ var submitButton = document.querySelector('#gform_submit_button_1');
 
 var createMessage = function createMessage(body) {
   return {
-    to: null,
     from: userEmail,
     timestamp: Date.now(),
     body: body,

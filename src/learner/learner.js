@@ -26,7 +26,6 @@ var messageText = document.querySelector('#input_1_1');
 var submitButton = document.querySelector('#gform_submit_button_1');
 
 const createMessage = body => ({
-  to: null,
   from: userEmail,
   timestamp: Date.now(),
   body: body,
