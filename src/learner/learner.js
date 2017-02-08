@@ -22,7 +22,7 @@ const mostRefEvent = (ref, evt) => {
 
 //TODO: eventual selector: note for me, for instructor conversation, for all learners conversation
 
-var messageText = document.querySelector('#input_1_1');
+var messageText = document.querySelector('#input_1_2');
 var submitButton = document.querySelector('#gform_submit_button_1');
 
 const createMessage = body => ({

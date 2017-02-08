@@ -6,8 +6,10 @@
 </head>
 <body>
 
-  <textarea id="input_1_1"></textarea>
-  <button id="gform_submit_button_1">Add Message</button>
+  <form>
+    <textarea id="input_1_2"></textarea>
+    <button type="submit" id="gform_submit_button_1" onclick="alert('submit was blocked by preventDefault, but not this click')">Add Message</button>
+  </form>
 
   <ul id="questions"></ul>
 
