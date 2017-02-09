@@ -18916,7 +18916,13 @@ var loaded = function loaded(learningElement) {
   };
 
   var message = function message(model) {
-    return h('div', {}, [h('textarea', { on: { propertychange: grabText, change: grabText, click: grabText, keyup: grabText, input: grabText, paste: grabText } }, [])]);
+    var syncValue = function syncValue(o, n) {
+      return n.elm.value = _ramda2.default.pathOr('', ['value'], model);
+    };
+
+    return h('div', {}, [h('textarea', { hook: { update: syncValue }, on: { propertychange: grabText, change: grabText, click: grabText, keyup: grabText, input: grabText, paste: grabText } }, [
+      //R.pathOr('', ['value'], model)
+    ])]);
   };
 
   var handleSubmit = function handleSubmit(event) {
@@ -18953,7 +18959,7 @@ var loaded = function loaded(learningElement) {
   // update machine //
   ////////////////////
 
-  var modelSeed = {};
+  var modelSeed = { value: '', submitAt: null };
 
   var mountSeed = el.querySelector('.mount');
 
@@ -18981,12 +18987,9 @@ var loaded = function loaded(learningElement) {
       var activity = _ramda2.default.pathOr('---', ['context', 'activity'], window);
       var section = _ramda2.default.pathOr('---', ['context', 'section'], window);
 
-      //TODO: how to split these behaviors to the right places
-
       emitter.emit('data::setMessage', { fromEmail: fromEmail, body: body, messageCreationPath: fromEmail + '/' + course + '/' + activity + '/' + section });
-      emitter.emit('intent', { type: 'submit', context: { submitAt: null } });
-      document.querySelector('textarea').value = '';
-      document.querySelector('textarea').click();
+      emitter.emit('intent', { type: 'submit', context: { submitAt: null } }); //NOTE: in the assess lib action and present are updated to take single intent with multiple context vals
+      emitter.emit('intent', { type: 'messageUpdate', context: { value: '' } });
     }
   };
 

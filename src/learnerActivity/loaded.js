@@ -33,8 +33,12 @@ var loaded = function(learningElement){
   };
 
   var message = function(model){
+    var syncValue = (o, n) => n.elm.value = R.pathOr('', ['value'], model);
+
     return h('div', {}, [
-      h('textarea', { on: { propertychange: grabText, change: grabText, click: grabText, keyup: grabText, input: grabText, paste: grabText } }, [])
+      h('textarea', { hook: { update: syncValue }, on: { propertychange: grabText, change: grabText, click: grabText, keyup: grabText, input: grabText, paste: grabText } }, [
+        //R.pathOr('', ['value'], model)
+      ])
     ]);
   };
 
@@ -88,7 +92,7 @@ var loaded = function(learningElement){
   // update machine //
   ////////////////////
 
-  var modelSeed = {};
+  var modelSeed = { value: '', submitAt: null };
 
   var mountSeed = el.querySelector('.mount');
 
@@ -117,12 +121,9 @@ var loaded = function(learningElement){
       var activity = R.pathOr('---', ['context', 'activity'], window);
       var section = R.pathOr('---', ['context', 'section'], window);
 
-      //TODO: how to split these behaviors to the right places
-
       emitter.emit('data::setMessage', { fromEmail, body, messageCreationPath: `${fromEmail}/${course}/${activity}/${section}` });
-      emitter.emit('intent', { type: 'submit', context: { submitAt: null } });
-      document.querySelector('textarea').value = '';
-      document.querySelector('textarea').click();
+      emitter.emit('intent', { type: 'submit', context: { submitAt: null } }); //NOTE: in the assess lib action and present are updated to take single intent with multiple context vals
+      emitter.emit('intent', { type: 'messageUpdate', context: { value: '' } });
     }
 
   };
@@ -178,7 +179,7 @@ var loaded = function(learningElement){
   //R.propOr({ observe: () => {} }, 'getResponses$', data).takeUntil(teardown$).observe( responses => emitter.emit('intent', { type: 'data::getResponses', context: { responses: responses } }) );
 
   var setMessage = function(message){
-    var set = R.propOr(function(){}, 'setMessage', data)
+    var set = R.propOr(function(){}, 'setMessage', data);
     set(message);
   };
 
