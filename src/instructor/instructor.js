@@ -1,5 +1,6 @@
 const most = require('most');
 const R = require('ramda');
+const moment = require('moment');
 const firebase = require('firebase');
 const fbconfig = require('../fbconfig');
 
@@ -54,6 +55,8 @@ most.fromEvent('click', document.querySelector('body'))
 const unansweredToHtml = (message, id) => {
   return `<li>
     <div class='message-body'>${message.body}</div>
+    <div class='message-from'>${message.from}</div>
+    <div class='message-timestamp'>${moment(message.timestamp).format('MMMM Do YYYY h:mm a')}</div>
     <div data-message-id="${id}" class='message-responses'>
       <textarea class="response-text"></textarea>
       <button data-message-id="${id}" class="respond">Respond</button>
@@ -89,7 +92,8 @@ unanswered$
 const responseToHtml = (response, id) => {
   return `<li>
     <div class='response-body'>${response.body}</div>
-    <div class='response-from'>From: ${response.from}</div>
+    <div class='response-from'>${response.from}</div>
+    <div class='response-timestamp'>${moment(response.timestamp).format('MMMM Do YYYY h:mm a')}</div>
   </li>`
 };
 
@@ -103,6 +107,8 @@ const responsesToHtml = R.compose(
 const answeredToHtml = (message, id) => {
   return `<li>
     <div class='message-body'>${message.body}</div>
+    <div class='message-from'>${message.from}</div>
+    <div class='message-timestamp'>${moment(message.timestamp).format('MMMM Do YYYY h:mm a')}</div>
     <div data-message-id="${id}" class='message-responses'>
       <ul>${responsesToHtml(R.pathOr([], ['responses'], message))}</ul>
     </div>

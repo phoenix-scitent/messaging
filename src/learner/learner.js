@@ -1,5 +1,6 @@
 const most = require('most');
 const R = require('ramda');
+const moment = require('moment');
 const firebase = require('firebase');
 const fbconfig = require('../fbconfig');
 
@@ -60,7 +61,8 @@ const message$ = userMessages(userEmail);
 const responseToHtml = (response, id) => {
   return `<li>
     <div class='response-body'>${response.body}</div>
-    <div class='response-from'>From: ${response.from}</div>
+    <div class='response-from'>${response.from}</div>
+    <div class='response-timestamp'>${moment(response.timestamp).format('MMMM Do YYYY h:mm a')}</div>
   </li>`
 };
 

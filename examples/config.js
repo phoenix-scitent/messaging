@@ -18975,8 +18975,8 @@ var loaded = function loaded(learningElement) {
     var value = _ramda2.default.pathOr(null, ['value'], model);
 
     if (shouldSubmit) {
-      var fromEmail = _ramda2.default.pathOr('---', ['context', 'user'], window);
       var body = _ramda2.default.pathOr('---', ['value'], model);
+      var fromEmail = _ramda2.default.pathOr('---', ['context', 'user'], window);
       var course = _ramda2.default.pathOr('---', ['context', 'course'], window);
       var activity = _ramda2.default.pathOr('---', ['context', 'activity'], window);
       var section = _ramda2.default.pathOr('---', ['context', 'section'], window);
