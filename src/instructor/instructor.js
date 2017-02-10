@@ -2,7 +2,16 @@ const most = require('most');
 const R = require('ramda');
 const moment = require('moment');
 const firebase = require('firebase');
-const fbconfig = require('../fbconfig');
+
+// TODO: how to abstract this out?
+
+var fbconfig = {
+  apiKey: "AIzaSyC6GvFxYBy8LIaojxyDHPfIu1_LYbW6STA",
+  authDomain: "scitent-test-80e67.firebaseapp.com",
+  databaseURL: "https://scitent-test-80e67.firebaseio.com",
+  storageBucket: "scitent-test-80e67.appspot.com",
+  messagingSenderId: "912116787242"
+};
 
 firebase.initializeApp(fbconfig);
 

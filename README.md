@@ -28,6 +28,13 @@ course_slug/activity_slug/section_slug/userid
 - `dist/learner.js` via netlify, embedded in WP
 - `import { configureMessaging } from 'messaging';` via activity config
 
+### build
+
+- `npm run bundle:learner`
+- `npm run bundle:instructor`
+- `npm run start` (uses browsersync)
+- `node examples/create.js` (create seed data)
+
 ### data types
 
 > state of data structure allows for polymorphic use, but all are 'response' (initial_question, question, answer)

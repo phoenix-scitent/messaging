@@ -5,11 +5,11 @@ import R from 'ramda';
 import * as most from 'most';
 
 import firebase from 'firebase';
-import fbconfig from '../fbconfig.js';
 
-firebase.initializeApp(fbconfig);
+var dataSetup = function({ sessionId, ref, options, config, testData, fbconfig }){
 
-var dataSetup = function({ sessionId, ref, options, config, testData }){
+  firebase.initializeApp(fbconfig);
+
   //TODO: get active data sources from index/config? get the init for them as well?
   //TODO: activity is structured like this as well... can communicate through bus (ex. current section, user, etc...)... has its own data set/get with completion etc...
   //TODO: events on initial setup for all -- multicast/behaviorsubject/etc activity to send last? OR send message to activity with stream and it will register it (have teardown setup)
@@ -25,6 +25,8 @@ var dataSetup = function({ sessionId, ref, options, config, testData }){
   // 2. [config] hooks (`config` function that takes object sent back from import of this library, merged in) [only place you can add functions] <config.js, setup.js, data.js>
   // 3. persisted data <setup.js, data.js>
   // 4. defaults in code <setup.js>
+
+  var getConfig$ = most.of(config);
 
   ////////////
   // tincan //
@@ -57,6 +59,7 @@ var dataSetup = function({ sessionId, ref, options, config, testData }){
   // decorate with activity info first for search? or add this in loaded.js?
 
   return {
+    getConfig$,
     setMessage
   };
 

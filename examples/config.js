@@ -1,11 +1,69 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-'use strict';
+"use strict";
 
-var _setup = require('./src/learnerActivity/setup');
+var _setup = require("./src/learnerActivity/setup");
 
-(0, _setup.configureMessaging)();
+////////////////////////////////////////////////////
+// FIREBASE CONFIG: passed in from activity level //
+////////////////////////////////////////////////////
 
-},{"./src/learnerActivity/setup":417}],2:[function(require,module,exports){
+var fbconfig = {
+  apiKey: "AIzaSyC6GvFxYBy8LIaojxyDHPfIu1_LYbW6STA",
+  authDomain: "scitent-test-80e67.firebaseapp.com",
+  databaseURL: "https://scitent-test-80e67.firebaseio.com",
+  storageBucket: "scitent-test-80e67.appspot.com",
+  messagingSenderId: "912116787242"
+};
+
+//////////////////////
+// HELPER FUNCTIONS //
+//////////////////////
+
+function hasClass(el, className) {
+  if (el.classList) return el.classList.contains(className);else return !!el.className.match(new RegExp('(\\s|^)' + className + '(\\s|$)'));
+}
+
+function addClass(el, className) {
+  if (el.classList) el.classList.add(className);else if (!hasClass(el, className)) el.className += " " + className;
+}
+
+function removeClass(el, className) {
+  if (el.classList) el.classList.remove(className);else if (hasClass(el, className)) {
+    var reg = new RegExp('(\\s|^)' + className + '(\\s|$)');
+    el.className = el.className.replace(reg, ' ');
+  }
+}
+
+function toggle_visibility(e) {
+  if (e.style.display == 'block') e.style.display = 'none';else e.style.display = 'block';
+}
+
+//////////////////////
+//////////////////////
+
+// SHOW HIDE \\
+
+document.getElementById('toggle-messaging').onclick = function (event) {
+  toggle_visibility(document.getElementsByClassName('messaging')[0]);
+};
+
+// GLOBAL CONFIG \\
+
+var allMessaging = {
+  // universal defaults
+  onSubmit: function onSubmit() {
+    alert('Thanks for submitting, check this page for a response!');
+    toggle_visibility(document.getElementsByClassName('messaging')[0]);
+  }
+};
+
+///////////
+// SETUP //
+///////////
+
+(0, _setup.configureMessaging)(fbconfig, allMessaging);
+
+},{"./src/learnerActivity/setup":416}],2:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -18693,19 +18751,6 @@ exports.mutationWatch = _mutationobserver.mutationWatch;
 exports.learningElement$ = _learningElementWatch.learningElement$;
 
 },{"./learningElementWatch":410,"./mutationobserver":411}],413:[function(require,module,exports){
-"use strict";
-
-var config = {
-  apiKey: "AIzaSyC6GvFxYBy8LIaojxyDHPfIu1_LYbW6STA",
-  authDomain: "scitent-test-80e67.firebaseapp.com",
-  databaseURL: "https://scitent-test-80e67.firebaseio.com",
-  storageBucket: "scitent-test-80e67.appspot.com",
-  messagingSenderId: "912116787242"
-};
-
-module.exports = config;
-
-},{}],414:[function(require,module,exports){
 'use strict';
 
 var _ramda = require('ramda');
@@ -18719,10 +18764,6 @@ var most = _interopRequireWildcard(_most);
 var _firebase = require('firebase');
 
 var _firebase2 = _interopRequireDefault(_firebase);
-
-var _fbconfig = require('../fbconfig.js');
-
-var _fbconfig2 = _interopRequireDefault(_fbconfig);
 
 function _interopRequireWildcard(obj) {
   if (obj && obj.__esModule) {
@@ -18740,17 +18781,15 @@ function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : { default: obj };
 }
 
-// firebase
-// tincan
-// localstore
-_firebase2.default.initializeApp(_fbconfig2.default);
-
 var dataSetup = function dataSetup(_ref) {
   var sessionId = _ref.sessionId,
       ref = _ref.ref,
       options = _ref.options,
       config = _ref.config,
-      testData = _ref.testData;
+      testData = _ref.testData,
+      fbconfig = _ref.fbconfig;
+
+  _firebase2.default.initializeApp(fbconfig);
 
   //TODO: get active data sources from index/config? get the init for them as well?
   //TODO: activity is structured like this as well... can communicate through bus (ex. current section, user, etc...)... has its own data set/get with completion etc...
@@ -18767,6 +18806,8 @@ var dataSetup = function dataSetup(_ref) {
   // 2. [config] hooks (`config` function that takes object sent back from import of this library, merged in) [only place you can add functions] <config.js, setup.js, data.js>
   // 3. persisted data <setup.js, data.js>
   // 4. defaults in code <setup.js>
+
+  var getConfig$ = most.of(config);
 
   ////////////
   // tincan //
@@ -18802,15 +18843,19 @@ var dataSetup = function dataSetup(_ref) {
   // decorate with activity info first for search? or add this in loaded.js?
 
   return {
+    getConfig$: getConfig$,
     setMessage: setMessage
   };
-};
+}; // firebase
+// tincan
+// localstore
+
 
 module.exports = {
   dataSetup: dataSetup
 };
 
-},{"../fbconfig.js":413,"firebase":7,"most":46,"ramda":82}],415:[function(require,module,exports){
+},{"firebase":7,"most":46,"ramda":82}],414:[function(require,module,exports){
 'use strict';
 
 //TODO: split this out into seperate module?
@@ -18834,7 +18879,7 @@ module.exports = {
   generateUUID: generateUUID
 };
 
-},{}],416:[function(require,module,exports){
+},{}],415:[function(require,module,exports){
 'use strict';
 
 var _ramda = require('ramda');
@@ -18920,7 +18965,7 @@ var loaded = function loaded(learningElement) {
       return n.elm.value = _ramda2.default.pathOr('', ['value'], model);
     };
 
-    return h('div', {}, [h('textarea', { hook: { update: syncValue }, on: { propertychange: grabText, change: grabText, click: grabText, keyup: grabText, input: grabText, paste: grabText } }, [
+    return h('div', {}, [h('textarea', { class: { 'messaging-message': true }, hook: { update: syncValue }, on: { propertychange: grabText, change: grabText, click: grabText, keyup: grabText, input: grabText, paste: grabText } }, [
       //R.pathOr('', ['value'], model)
     ])]);
   };
@@ -18930,7 +18975,7 @@ var loaded = function loaded(learningElement) {
   };
 
   var submit = function submit(model) {
-    return h('a', { attrs: { style: 'cursor:pointer;' }, on: { click: handleSubmit } }, 'submit');
+    return h('a', { class: { 'messaging-submit': true }, attrs: { style: 'cursor:pointer;' }, on: { click: handleSubmit } }, 'submit');
   };
 
   var wrapper = function wrapper(model, face, children) {
@@ -18990,6 +19035,11 @@ var loaded = function loaded(learningElement) {
       emitter.emit('data::setMessage', { fromEmail: fromEmail, body: body, messageCreationPath: fromEmail + '/' + course + '/' + activity + '/' + section });
       emitter.emit('intent', { type: 'submit', context: { submitAt: null } }); //NOTE: in the assess lib action and present are updated to take single intent with multiple context vals
       emitter.emit('intent', { type: 'messageUpdate', context: { value: '' } });
+
+      // TODO: is this the appropriate place for this?
+      // TODO: should we not pass in FULL model?
+
+      _ramda2.default.pathOr(function () {}, ['config', 'onSubmit'], model)(_ramda2.default.clone(model));
     }
   };
 
@@ -18997,11 +19047,15 @@ var loaded = function loaded(learningElement) {
     // propose?
 
     return _ramda2.default.cond([// can add validations and things with the current model...
-    [_ramda2.default.has('value'), _ramda2.default.compose(_ramda2.default.assocPath(['value'], _ramda2.default.__, model), _ramda2.default.pathOr(null, ['value']))], [_ramda2.default.has('submitAt'), _ramda2.default.compose(_ramda2.default.assocPath(['submitAt'], _ramda2.default.__, model), _ramda2.default.pathOr(null, ['submitAt']))], [_ramda2.default.T, _ramda2.default.always(model)]])(data);
+    [_ramda2.default.has('value'), _ramda2.default.compose(_ramda2.default.assocPath(['value'], _ramda2.default.__, model), _ramda2.default.pathOr(null, ['value']))], [_ramda2.default.has('submitAt'), _ramda2.default.compose(_ramda2.default.assocPath(['submitAt'], _ramda2.default.__, model), _ramda2.default.pathOr(null, ['submitAt']))], [_ramda2.default.has('config'), _ramda2.default.compose(_ramda2.default.assocPath(['config'], _ramda2.default.__, model), _ramda2.default.pathOr({}, ['config']))], [_ramda2.default.T, _ramda2.default.always(model)]])(data);
   };
 
   var action = function action(intent) {
     emitter.emit('internal', { type: 'action', context: { type: intent.type, context: JSON.stringify(intent.context) } });
+
+    if (intent.type === 'data::getConfig') {
+      return most.of(intent.context); // can also do processing...
+    }
 
     if (intent.type === 'messageUpdate') {
       return most.of(intent.context); // can also do processing...
@@ -19038,6 +19092,10 @@ var loaded = function loaded(learningElement) {
   //R.propOr({ observe: () => {} }, 'getConfig$', data).takeUntil(teardown$).observe( config => emitter.emit('intent', { type: 'data::getConfig', context: { config: config } }) );
   //R.propOr({ observe: () => {} }, 'getResponse$', data).takeUntil(teardown$).observe( response => emitter.emit('intent', { type: 'data::getResponse', context: { response: response } }) );
   //R.propOr({ observe: () => {} }, 'getResponses$', data).takeUntil(teardown$).observe( responses => emitter.emit('intent', { type: 'data::getResponses', context: { responses: responses } }) );
+
+  _ramda2.default.propOr({ observe: function observe() {} }, 'getConfig$', data).takeUntil(teardown$).observe(function (config) {
+    return emitter.emit('intent', { type: 'data::getConfig', context: { config: config } });
+  });
 
   var setMessage = function setMessage(message) {
     var set = _ramda2.default.propOr(function () {}, 'setMessage', data);
@@ -19090,7 +19148,7 @@ module.exports = {
   loaded: loaded
 };
 
-},{"./helpers.js":415,"desandro-classie":3,"most":46,"ramda":82,"snabbdom":406,"snabbdom-virtualize":392,"snabbdom/h":398,"snabbdom/modules/attributes":401,"snabbdom/modules/class":402,"snabbdom/modules/eventlisteners":403,"snabbdom/modules/props":404,"snabbdom/modules/style":405}],417:[function(require,module,exports){
+},{"./helpers.js":414,"desandro-classie":3,"most":46,"ramda":82,"snabbdom":406,"snabbdom-virtualize":392,"snabbdom/h":398,"snabbdom/modules/attributes":401,"snabbdom/modules/class":402,"snabbdom/modules/eventlisteners":403,"snabbdom/modules/props":404,"snabbdom/modules/style":405}],416:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -19132,9 +19190,9 @@ function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : { default: obj };
 }
 
-var configureMessaging = function configureMessaging() {
-  var configuration = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  var testData = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+var configureMessaging = function configureMessaging(fbconfig) {
+  var configuration = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  var testData = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
   _watcher.learningElement$.filter(function (el) {
     return el.getAttribute('learning-element') === 'messaging';
@@ -19145,8 +19203,8 @@ var configureMessaging = function configureMessaging() {
     var emitter = (0, _partybus.makeEmitter)();
     var ref = el.getAttribute('learning-element-ref');
     var options = _ramda2.default.unless(_ramda2.default.isNil, JSON.parse)(el.getAttribute('learning-element-options'));
-    var config = _ramda2.default.pathOr({}, [ref], configuration);
-    var data = (0, _data.dataSetup)({ sessionId: sessionId, ref: ref, options: options, config: config });
+    var config = configuration;
+    var data = (0, _data.dataSetup)({ sessionId: sessionId, ref: ref, options: options, config: config, fbconfig: fbconfig });
 
     //TODO: best way to make decisions here using data?
 
@@ -19156,6 +19214,6 @@ var configureMessaging = function configureMessaging() {
 
 exports.configureMessaging = configureMessaging;
 
-},{"./data.js":414,"./helpers.js":415,"./loaded.js":416,"most":46,"partybus":81,"ramda":82,"watcher":412}]},{},[1])
+},{"./data.js":413,"./helpers.js":414,"./loaded.js":415,"most":46,"partybus":81,"ramda":82,"watcher":412}]},{},[1])
 
 //# sourceMappingURL=config.js.map

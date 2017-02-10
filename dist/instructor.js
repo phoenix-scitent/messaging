@@ -21222,26 +21222,22 @@ module.exports = _curry3(function zipWith(fn, a, b) {
 });
 
 },{"./internal/_curry3":182}],388:[function(require,module,exports){
-"use strict";
-
-var config = {
-  apiKey: "AIzaSyC6GvFxYBy8LIaojxyDHPfIu1_LYbW6STA",
-  authDomain: "scitent-test-80e67.firebaseapp.com",
-  databaseURL: "https://scitent-test-80e67.firebaseio.com",
-  storageBucket: "scitent-test-80e67.appspot.com",
-  messagingSenderId: "912116787242"
-};
-
-module.exports = config;
-
-},{}],389:[function(require,module,exports){
 'use strict';
 
 var most = require('most');
 var R = require('ramda');
 var moment = require('moment');
 var firebase = require('firebase');
-var fbconfig = require('../fbconfig');
+
+// TODO: how to abstract this out?
+
+var fbconfig = {
+  apiKey: "AIzaSyC6GvFxYBy8LIaojxyDHPfIu1_LYbW6STA",
+  authDomain: "scitent-test-80e67.firebaseapp.com",
+  databaseURL: "https://scitent-test-80e67.firebaseio.com",
+  storageBucket: "scitent-test-80e67.appspot.com",
+  messagingSenderId: "912116787242"
+};
 
 firebase.initializeApp(fbconfig);
 
@@ -21351,4 +21347,4 @@ answered$
 //.scan((messages, message) => { return R.append(message, messages) }, [])
 .map(answeredsToHtml).tap(renderAnswered).drain();
 
-},{"../fbconfig":388,"firebase":4,"moment":7,"most":44,"ramda":79}]},{},[389]);
+},{"firebase":4,"moment":7,"most":44,"ramda":79}]},{},[388]);

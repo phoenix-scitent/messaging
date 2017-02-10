@@ -7,7 +7,16 @@
 const most = require('most');
 const R = require('ramda');
 const firebase = require('firebase');
-const fbconfig = require('../src/fbconfig');
+
+// TODO: how to abstract this out?
+
+var fbconfig = {
+  apiKey: "AIzaSyC6GvFxYBy8LIaojxyDHPfIu1_LYbW6STA",
+  authDomain: "scitent-test-80e67.firebaseapp.com",
+  databaseURL: "https://scitent-test-80e67.firebaseio.com",
+  storageBucket: "scitent-test-80e67.appspot.com",
+  messagingSenderId: "912116787242"
+};
 
 firebase.initializeApp(fbconfig);
 
@@ -22,7 +31,7 @@ const users = firebase.database().ref('users');
 //})
 
 const createFakeMessage = () => {
-  messages.push({
+  var message = {
     to: null,
     from: userEmail,
     body: '9 bill, millis',
@@ -51,7 +60,11 @@ const createFakeMessage = () => {
         ]
       }
     ]
-  })
+  };
+
+  messages.push(message);
+
+  console.log(message);
 };
 
 most.periodic(2000).forEach(createFakeMessage);

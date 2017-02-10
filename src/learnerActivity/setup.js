@@ -6,7 +6,7 @@ import { generateUUID } from './helpers.js';
 import { dataSetup } from './data.js';
 import { loaded } from './loaded.js';
 
-const configureMessaging = function(configuration = {}, testData = {}){
+const configureMessaging = function(fbconfig, configuration = {}, testData = {}){
 
   learningElement$
       .filter(el => el.getAttribute('learning-element') === 'messaging')
@@ -16,8 +16,8 @@ const configureMessaging = function(configuration = {}, testData = {}){
         const emitter = makeEmitter();
         const ref = el.getAttribute('learning-element-ref');
         const options = R.unless(R.isNil, JSON.parse)(el.getAttribute('learning-element-options'));
-        const config = R.pathOr({}, [ref], configuration);
-        const data = dataSetup({ sessionId, ref, options, config });
+        const config = configuration;
+        const data = dataSetup({ sessionId, ref, options, config, fbconfig });
 
         //TODO: best way to make decisions here using data?
 

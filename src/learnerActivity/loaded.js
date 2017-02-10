@@ -36,7 +36,7 @@ var loaded = function(learningElement){
     var syncValue = (o, n) => n.elm.value = R.pathOr('', ['value'], model);
 
     return h('div', {}, [
-      h('textarea', { hook: { update: syncValue }, on: { propertychange: grabText, change: grabText, click: grabText, keyup: grabText, input: grabText, paste: grabText } }, [
+      h('textarea', { class: { 'messaging-message': true }, hook: { update: syncValue }, on: { propertychange: grabText, change: grabText, click: grabText, keyup: grabText, input: grabText, paste: grabText } }, [
         //R.pathOr('', ['value'], model)
       ])
     ]);
@@ -47,7 +47,7 @@ var loaded = function(learningElement){
   };
 
   var submit = function(model){
-    return h('a', { attrs: { style: 'cursor:pointer;' }, on: { click: handleSubmit } }, 'submit')
+    return h('a', { class: { 'messaging-submit': true }, attrs: { style: 'cursor:pointer;' }, on: { click: handleSubmit } }, 'submit')
   };
 
   var wrapper = function(model, face, children){
@@ -124,6 +124,12 @@ var loaded = function(learningElement){
       emitter.emit('data::setMessage', { fromEmail, body, messageCreationPath: `${fromEmail}/${course}/${activity}/${section}` });
       emitter.emit('intent', { type: 'submit', context: { submitAt: null } }); //NOTE: in the assess lib action and present are updated to take single intent with multiple context vals
       emitter.emit('intent', { type: 'messageUpdate', context: { value: '' } });
+
+      // TODO: is this the appropriate place for this?
+      // TODO: should we not pass in FULL model?
+
+      R.pathOr(() => {}, ['config', 'onSubmit'], model)(R.clone(model));
+
     }
 
   };
@@ -133,6 +139,7 @@ var loaded = function(learningElement){
     return R.cond([ // can add validations and things with the current model...
       [R.has('value'), R.compose(R.assocPath(['value'], R.__, model), R.pathOr(null, ['value']))],
       [R.has('submitAt'), R.compose(R.assocPath(['submitAt'], R.__, model), R.pathOr(null, ['submitAt']))],
+      [R.has('config'), R.compose(R.assocPath(['config'], R.__, model), R.pathOr({}, ['config']))],
       [R.T, R.always(model)]
     ])(data);
 
@@ -140,6 +147,10 @@ var loaded = function(learningElement){
 
   var action = function(intent){
     emitter.emit('internal', { type: 'action', context: { type: intent.type, context: JSON.stringify(intent.context) } });
+
+    if(intent.type === 'data::getConfig'){
+      return most.of(intent.context); // can also do processing...
+    }
 
     if(intent.type === 'messageUpdate'){
       return most.of(intent.context); // can also do processing...
@@ -177,6 +188,8 @@ var loaded = function(learningElement){
   //R.propOr({ observe: () => {} }, 'getConfig$', data).takeUntil(teardown$).observe( config => emitter.emit('intent', { type: 'data::getConfig', context: { config: config } }) );
   //R.propOr({ observe: () => {} }, 'getResponse$', data).takeUntil(teardown$).observe( response => emitter.emit('intent', { type: 'data::getResponse', context: { response: response } }) );
   //R.propOr({ observe: () => {} }, 'getResponses$', data).takeUntil(teardown$).observe( responses => emitter.emit('intent', { type: 'data::getResponses', context: { responses: responses } }) );
+
+  R.propOr({ observe: () => {} }, 'getConfig$', data).takeUntil(teardown$).observe( config => emitter.emit('intent', { type: 'data::getConfig', context: { config: config } }) );
 
   var setMessage = function(message){
     var set = R.propOr(function(){}, 'setMessage', data);
