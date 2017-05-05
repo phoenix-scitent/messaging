@@ -18979,7 +18979,7 @@ var loaded = function loaded(learningElement) {
   };
 
   var wrapper = function wrapper(model, face, children) {
-    return h('div', { class: { 'messaging': true } }, [h('div', { class: _defineProperty({}, 'messaging-' + face, true) }, [JSON.stringify(model)].concat(_toConsumableArray(children)))]);
+    return h('div', { class: { 'messaging': true } }, [h('div', { class: _defineProperty({}, 'messaging-' + face, true) }, [].concat(_toConsumableArray(children)))]);
   };
 
   var front = function front(model) {
@@ -19027,7 +19027,7 @@ var loaded = function loaded(learningElement) {
 
     if (shouldSubmit) {
       var body = _ramda2.default.pathOr('---', ['value'], model);
-      var fromEmail = _ramda2.default.pathOr('---', ['context', 'user'], window);
+      var fromEmail = _ramda2.default.pathOr('---', ['context', 'user', 'email'], window);
       var course = _ramda2.default.pathOr('---', ['context', 'course'], window);
       var activity = _ramda2.default.pathOr('---', ['context', 'activity'], window);
       var section = _ramda2.default.pathOr('---', ['context', 'section'], window);
@@ -19036,7 +19036,7 @@ var loaded = function loaded(learningElement) {
       emitter.emit('intent', { type: 'submit', context: { submitAt: null } }); //NOTE: in the assess lib action and present are updated to take single intent with multiple context vals
       emitter.emit('intent', { type: 'messageUpdate', context: { value: '' } });
 
-      // TODO: is this the appropriate place for this?
+      // TODO: is this the appropriate place for this hook?
       // TODO: should we not pass in FULL model?
 
       _ramda2.default.pathOr(function () {}, ['config', 'onSubmit'], model)(_ramda2.default.clone(model));

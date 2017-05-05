@@ -53,7 +53,7 @@ var loaded = function(learningElement){
   var wrapper = function(model, face, children){
     return h('div', { class: { 'messaging': true } }, [
       h('div', { class: { [`messaging-${face}`]: true } }, [
-        JSON.stringify(model),
+        //JSON.stringify(model),
         ...children
       ])
     ]);
@@ -116,7 +116,7 @@ var loaded = function(learningElement){
 
     if(shouldSubmit){
       var body = R.pathOr('---', ['value'], model);
-      var fromEmail = R.pathOr('---', ['context', 'user'], window);
+      var fromEmail = R.pathOr('---', ['context', 'user', 'email'], window);
       var course = R.pathOr('---', ['context', 'course'], window);
       var activity = R.pathOr('---', ['context', 'activity'], window);
       var section = R.pathOr('---', ['context', 'section'], window);
@@ -125,7 +125,7 @@ var loaded = function(learningElement){
       emitter.emit('intent', { type: 'submit', context: { submitAt: null } }); //NOTE: in the assess lib action and present are updated to take single intent with multiple context vals
       emitter.emit('intent', { type: 'messageUpdate', context: { value: '' } });
 
-      // TODO: is this the appropriate place for this?
+      // TODO: is this the appropriate place for this hook?
       // TODO: should we not pass in FULL model?
 
       R.pathOr(() => {}, ['config', 'onSubmit'], model)(R.clone(model));

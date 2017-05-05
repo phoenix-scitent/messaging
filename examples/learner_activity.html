@@ -129,7 +129,10 @@
     // from hucklebuck (activity context)
 
     window.context = {
-      user: 'user2@user.com',
+      user: {
+        email: 'user2@user.com',
+        name: 'User Two'
+      },
       course: 'Test Course',
       activity: 'Activity One',
       section: 'section1'
