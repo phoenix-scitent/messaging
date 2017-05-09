@@ -47,7 +47,7 @@ var loaded = function(learningElement){
   };
 
   var submit = function(model){
-    return h('a', { class: { 'messaging-submit': true }, attrs: { style: 'cursor:pointer;' }, on: { click: handleSubmit } }, 'submit')
+    return h('a', { class: { 'messaging-submit': true }, attrs: { style: 'cursor:pointer;' }, on: { click: handleSubmit } }, 'Submit')
   };
 
   var wrapper = function(model, face, children){
